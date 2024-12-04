@@ -118,3 +118,18 @@ fn is_safe<'a, I: Iterator<Item = &'a str>>(report: I, mut already_dampened: boo
     }
     true
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_safe_count() {
+        assert_eq!(safe_count(), 332);
+    }
+
+    #[test]
+    fn test_dampened_count() {
+        assert_eq!(dampened_count(), 398);
+    }
+}
