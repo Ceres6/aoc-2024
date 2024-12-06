@@ -35,14 +35,7 @@ fn parse_enabled(contents: &str) -> impl Iterator<Item = &str> {
     contents
         .split("don't()")
         .enumerate()
-        .flat_map(|(i, chunk)| {
-            if i == 0 {
-                // unnecessary skip to conform to types
-                chunk.split("do()")
-            } else {
-                chunk.split("do()").skip(1)
-            }
-        })
+        .flat_map(|(i, chunk)| chunk.split("do()").skip((i > 0) as usize))
 }
 
 trait TrySum<T> {
