@@ -35,7 +35,7 @@ fn can_go_direction(
 }
 
 fn is_match_in_direction(
-    grid: &Vec<Vec<char>>,
+    grid: &[Vec<char>],
     vertical: DirectionFlow,
     horizontal: DirectionFlow,
     v_pos: usize,
