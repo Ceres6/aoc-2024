@@ -168,7 +168,6 @@ pub(crate) fn page_custom_order(ordered: bool) -> anyhow::Result<usize> {
                 }
                 Ordering::Equal
             }).copied().collect();
-            println!("{sorted_update:?}");
             let is_ordered = sorted_update == update;
             if is_ordered == ordered {
               let mid = sorted_update.len() / 2;

@@ -3,6 +3,7 @@ mod dec2;
 mod dec3;
 mod dec4;
 mod dec5;
+mod dec6;
 
 fn main() -> anyhow::Result<()> {
     println!("diff {}", dec1::diff());
@@ -18,5 +19,7 @@ fn main() -> anyhow::Result<()> {
     println!("Middle page unordered updates sum by predecessors and antecessors struct {}", dec5::middle_page_sum(false)?);
     println!("Middle page ordered updates sum by custom ordering function {}", dec5::page_custom_order(true)?);
     println!("Middle page unordered updates sum by custom ordering function {}", dec5::page_custom_order(true)?);
+    println!("Guard unique position count {}", dec6::guard_position_count()?);
+    println!("Possible loops with new obstacle {}", dec6::count_possible_loops()?);
     Ok(())
 }
