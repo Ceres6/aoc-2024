@@ -5,6 +5,7 @@ mod dec4;
 mod dec5;
 mod dec6;
 mod dec7;
+mod dec8;
 
 fn main() -> anyhow::Result<()> {
     println!("diff {}", dec1::diff());
@@ -23,5 +24,7 @@ fn main() -> anyhow::Result<()> {
     println!("Guard unique position count {}", dec6::guard_position_count()?);
     println!("Possible loops with new obstacle {}", dec6::count_possible_loops()?);
     println!("Feasible equations sum {}", dec7::feasible_equations()?);
+    println!("Antinodes count {}", dec8::count_antinodes()?);
+    println!("Resonating antinodes count {}", dec8::count_resonating_antinodes()?);
     Ok(())
 }

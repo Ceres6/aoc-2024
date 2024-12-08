@@ -5,7 +5,7 @@ use std::{
 };
 
 use anyhow::Context;
-use fxhash::FxHashSet as HashSet;
+// use fxhash::FxHashSet as HashSet;
 use rayon::prelude::*;
 // use gxhash::{HashSet, HashSetExt};
 // use ahash::{HashSet, HashSetExt};
@@ -49,6 +49,12 @@ impl From<GuardState> for u32 {
     }
 }
 
+impl From<GuardState> for usize {
+    fn from(value: GuardState) -> Self {
+        usize::from(value.direction) * 130 * 130 + (value.i * 130 + value.j) as usize
+    }
+}
+
 #[derive(PartialEq, Eq, Hash, Debug)]
 struct Position {
     i: u16,
@@ -73,6 +79,18 @@ impl From<u16> for Position {
     }
 }
 
+impl From<Position> for usize {
+    fn from(value: Position) -> Self {
+       (value.i * 130 + value.j) as usize
+    }
+}
+
+impl From<usize> for Position {
+    fn from(value: usize) -> Self {
+        Position::new((value / 130) as u16, (value % 130) as u16)
+    }
+}
+
 #[derive(Default, PartialEq, Eq, Hash, Clone, Debug)]
 enum Direction {
     #[default]
@@ -94,6 +112,17 @@ impl Direction {
 }
 
 impl From<Direction> for u32 {
+    fn from(value: Direction) -> Self {
+        match value {
+            Direction::Up => 0,
+            Direction::Right => 1,
+            Direction::Down => 2,
+            Direction::Left => 3,
+        }
+    }
+}
+
+impl From<Direction> for usize {
     fn from(value: Direction) -> Self {
         match value {
             Direction::Up => 0,
@@ -138,7 +167,9 @@ pub(crate) fn count_possible_loops() -> anyhow::Result<usize> {
     let positions = hash_positions(&map, &mut guard_state.clone());
     let loop_count = positions
         .into_par_iter()
-        .map(|position| is_loop(&map, &mut guard_state.clone(), position.into()) as usize)
+        .enumerate()
+        .filter(|(_, visited)| *visited)
+        .map(|(position, _)| is_loop(&map, &mut guard_state.clone(), position.into()) as usize)
         .sum();
     Ok(loop_count)
 }
@@ -169,10 +200,11 @@ fn create_map_and_initial_state() -> anyhow::Result<(Vec<Vec<char>>, GuardState)
     Ok((map, guard_state))
 }
 
-fn hash_positions(map: &[Vec<char>], guard_state: &mut GuardState) -> HashSet<u16> {
+fn hash_positions(map: &[Vec<char>], guard_state: &mut GuardState) -> [bool; 130 * 130] {
     let initial_position = Position::new(guard_state.i, guard_state.j);
-    let mut positions: HashSet<u16> = HashSet::default();
+    // let mut positions: HashSet<u16> = HashSet::default();
     // let mut positions: HashSet<u16> = HashSet::new();
+    let mut positions = [false; 130 * 130];
     while let Ok(position) = guard_state.next_position() {
         let break_condition = map
             .get(position.i as usize)
@@ -184,7 +216,7 @@ fn hash_positions(map: &[Vec<char>], guard_state: &mut GuardState) -> HashSet<u1
                     guard_state.move_forward();
                     let new_position = Position::new(guard_state.i, guard_state.j);
                     if new_position != initial_position {
-                        positions.insert(new_position.into());
+                        positions[usize::from(new_position)] = true;
                     }
                 }
             })
@@ -197,8 +229,9 @@ fn hash_positions(map: &[Vec<char>], guard_state: &mut GuardState) -> HashSet<u1
 }
 
 fn is_loop(map: &[Vec<char>], guard_state: &mut GuardState, new_obstacle: Position) -> bool {
-    let mut states: HashSet<u32> = HashSet::default();
+    // let mut states: HashSet<u32> = HashSet::default();
     // let mut states: HashSet<u32> = HashSet::new();
+    let mut states = [false; 130 * 130 * 4];
     let mut already_present = false;
     while let Ok(position) = guard_state.next_position() {
         if already_present {
@@ -206,7 +239,10 @@ fn is_loop(map: &[Vec<char>], guard_state: &mut GuardState, new_obstacle: Positi
         }
         if new_obstacle == position {
             guard_state.turn();
-            already_present = !states.insert(guard_state.clone().into());
+            let state_index = usize::from(guard_state.clone());
+            already_present = states[state_index];
+            states[state_index] = true;
+            // already_present = !states.insert(guard_state.clone().into());
             continue;
         }
         let break_condition = map
@@ -218,7 +254,10 @@ fn is_loop(map: &[Vec<char>], guard_state: &mut GuardState, new_obstacle: Positi
                 } else {
                     guard_state.move_forward();
                 }
-                already_present = !states.insert(guard_state.clone().into());
+                // already_present = !states.insert(guard_state.clone().into());
+                let state_index = usize::from(guard_state.clone());
+                already_present = states[state_index];
+                states[state_index] = true;
             })
             .is_none();
         if break_condition {
@@ -240,6 +279,7 @@ mod test {
 }
 
 // cargo flamegraph showed that most time is spent on hashing and iterating over hash
+// benchmarking with criterion
 // Changing the size of positions from usize to u16 improved from 1.33 to 1.27 -> Not very good
 // Converting Position to u16 and GuardState to u32 before hashing improved from 1.27 to 0.700 -> noticeable
 // Using gxHash improved from 0.700 to 0.353 -> noticeable
@@ -247,3 +287,7 @@ mod test {
 // Using fxHash improve to 0.250 -> better
 // Adding rayon improved from 0.150 to 0.037 -> almost 10x reduction (which makes sense as I'm using 10 cores computer)
 // using boolean grid took .725 -> terribly worse
+// using 1D boolean array with preallocated size for guard state took 9.5ms -> much better
+// adding 1D boolean array with preallocated size for visited positions took 9.1ms -> slightly better
+// Almost 148x from first try
+
