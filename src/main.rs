@@ -6,6 +6,7 @@ mod dec5;
 mod dec6;
 mod dec7;
 mod dec8;
+mod dec9;
 
 fn main() -> anyhow::Result<()> {
     println!("diff {}", dec1::diff());
@@ -26,5 +27,7 @@ fn main() -> anyhow::Result<()> {
     println!("Feasible equations sum {}", dec7::feasible_equations()?);
     println!("Antinodes count {}", dec8::count_antinodes()?);
     println!("Resonating antinodes count {}", dec8::count_resonating_antinodes()?);
+    println!("Compact checksum {}", dec9::compact_checksum()?);
+    println!("Unfragmented compact checksum {}", dec9::unfragmented_compact_checksum()?);
     Ok(())
 }
