@@ -7,6 +7,7 @@ mod dec6;
 mod dec7;
 mod dec8;
 mod dec9;
+mod dec10;
 
 fn main() -> anyhow::Result<()> {
     println!("diff {}", dec1::diff());
@@ -29,5 +30,7 @@ fn main() -> anyhow::Result<()> {
     println!("Resonating antinodes count {}", dec8::count_resonating_antinodes()?);
     println!("Compact checksum {}", dec9::compact_checksum()?);
     println!("Unfragmented compact checksum {}", dec9::unfragmented_compact_checksum()?);
+    println!("Total trail score {}", dec10::sum_trailhead_scores(true)?);
+    println!("Total trail rating {}", dec10::sum_trailhead_scores(false)?);
     Ok(())
 }
