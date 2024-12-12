@@ -8,6 +8,7 @@ mod dec7;
 mod dec8;
 mod dec9;
 mod dec10;
+mod dec11;
 
 fn main() -> anyhow::Result<()> {
     println!("diff {}", dec1::diff());
@@ -32,5 +33,6 @@ fn main() -> anyhow::Result<()> {
     println!("Unfragmented compact checksum {}", dec9::unfragmented_compact_checksum()?);
     println!("Total trail score {}", dec10::sum_trailhead_scores(true)?);
     println!("Total trail rating {}", dec10::sum_trailhead_scores(false)?);
+    println!("Stone count {}", dec11::count_stones()?);
     Ok(())
 }
