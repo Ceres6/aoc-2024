@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 ahash = "0.8.11"
 anyhow = "1.0.94"
-derive_more = { version = "1.0.0", features = ["add"] }
+derive_more = { version = "1.0.0", features = ["add", "add_assign"] }
 fxhash = "0.2.1"
 gxhash = "3.4.1"
 itertools = "0.13.0"

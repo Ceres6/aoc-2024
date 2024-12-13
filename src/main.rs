@@ -9,6 +9,7 @@ mod dec8;
 mod dec9;
 mod dec10;
 mod dec11;
+mod dec12;
 
 fn main() -> anyhow::Result<()> {
     println!("diff {}", dec1::diff());
@@ -34,5 +35,7 @@ fn main() -> anyhow::Result<()> {
     println!("Total trail score {}", dec10::sum_trailhead_scores(true)?);
     println!("Total trail rating {}", dec10::sum_trailhead_scores(false)?);
     println!("Stone count {}", dec11::count_stones()?);
+    println!("Fence price {}", dec12::fence_price(false)?);
+    println!("Fence price with bulk discount {}", dec12::fence_price(true)?);
     Ok(())
 }
