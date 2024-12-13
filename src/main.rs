@@ -10,6 +10,7 @@ mod dec9;
 mod dec10;
 mod dec11;
 mod dec12;
+mod dec13;
 
 fn main() -> anyhow::Result<()> {
     println!("diff {}", dec1::diff());
@@ -37,5 +38,7 @@ fn main() -> anyhow::Result<()> {
     println!("Stone count {}", dec11::count_stones()?);
     println!("Fence price {}", dec12::fence_price(false)?);
     println!("Fence price with bulk discount {}", dec12::fence_price(true)?);
+    println!("Minimum tokens {}", dec13::minimum_tokens(0)?);
+    println!("Minimum tokens with offset {}", dec13::minimum_tokens(10000000000000)?);
     Ok(())
 }
