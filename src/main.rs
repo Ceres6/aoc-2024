@@ -12,6 +12,7 @@ mod dec11;
 mod dec12;
 mod dec13;
 mod dec14;
+mod dec15;
 
 fn main() -> anyhow::Result<()> {
     println!("diff {}", dec1::diff());
@@ -42,5 +43,7 @@ fn main() -> anyhow::Result<()> {
     println!("Minimum tokens {}", dec13::minimum_tokens(0)?);
     println!("Minimum tokens with offset {}", dec13::minimum_tokens(10000000000000)?);
     println!("Safety factor {}", dec14::safety_factor()?);
+    println!("Good positioning system sum {}", dec15::sum_box_positions()?);
+    println!("Good positioning system wide {}", dec15::sum_wide_box_positions()?);
     Ok(())
 }
