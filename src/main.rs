@@ -13,6 +13,7 @@ mod dec12;
 mod dec13;
 mod dec14;
 mod dec15;
+mod dec16;
 
 fn main() -> anyhow::Result<()> {
     println!("diff {}", dec1::diff());
@@ -45,5 +46,6 @@ fn main() -> anyhow::Result<()> {
     println!("Safety factor {}", dec14::safety_factor()?);
     println!("Good positioning system sum {}", dec15::sum_box_positions()?);
     println!("Good positioning system wide {}", dec15::sum_wide_box_positions()?);
+    println!("Lowest path score {}", dec16::lowest_score_path()?);
     Ok(())
 }
